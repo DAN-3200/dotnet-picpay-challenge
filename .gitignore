@@ -1,5 +1,6 @@
 bin
 obj
+out
 .env
 appsettings.json
 appsettings.Development.json
@@ -8,3 +9,4 @@ appsettings.Development.json
 /.git
 PicPay.sln.DotSettings.user
 main/PicPay.csproj.user
+*.DotSettings.user
