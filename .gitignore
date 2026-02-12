@@ -1,0 +1,10 @@
+bin
+obj
+.env
+appsettings.json
+appsettings.Development.json
+.vs
+.idea
+/.git
+PicPay.sln.DotSettings.user
+main/PicPay.csproj.user
