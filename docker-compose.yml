@@ -1,0 +1,15 @@
+﻿services:
+  database:
+    image: postgres:latest
+    container_name: db_picpay
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 4321
+      POSTGRES_DB: picpay
+    ports:
+      - 5600:5432
+    volumes:
+      - db_picpay:/var/lib/postgress/database
+
+volumes:
+  db_picpay:
