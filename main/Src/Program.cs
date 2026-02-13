@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PicPay.Inner.Usecase;
 using PicPay.Outer.Persistence;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -9,6 +10,15 @@ var builder = WebApplication.CreateBuilder(args);
         opt.UseNpgsql(builder.Configuration.GetConnectionString("URI")));
     builder.Services.AddScoped<UserUc>();
     builder.Services.AddScoped<PaymentUc>();
+
+    builder.Services.AddControllers();
+    
+    Log.Logger = new LoggerConfiguration()
+        .MinimumLevel.Information()
+        .Enrich.FromLogContext()
+        .WriteTo.Console()
+        .CreateLogger();
+    builder.Host.UseSerilog();
 }
 
 var app = builder.Build();
@@ -19,6 +29,7 @@ var app = builder.Build();
     }
 
     app.UseHttpsRedirection();
+    app.UseSerilogRequestLogging();
 }
 
 app.Run();
