@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PicPay.Inner.Usecase;
 using PicPay.Outer.Persistence;
+using Scalar.AspNetCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,6 +26,7 @@ var app = builder.Build();
 {
     if (app.Environment.IsDevelopment())
     {
+        app.MapScalarApiReference();
         app.MapOpenApi();
     }
 
