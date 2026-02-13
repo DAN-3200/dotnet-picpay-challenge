@@ -3,10 +3,10 @@ namespace PicPay.Inner.Entity;
 public class UserEntity
 {
     public string? Id { get; private set; }
-    public string Name { get; private set; }
-    public string Cpf { get; private set; }
-    public string Email { get; private set; }
-    public string Password { get; private set; }
+    public string Name { get; private set; } = string.Empty;
+    public string Cpf { get; private set; } = string.Empty;
+    public string Email { get; private set; } = string.Empty;
+    public string Password { get; private set; } = string.Empty;
     public Role Role { get; private set; }
     public decimal Balance { get; private set; }
     public DateTime CreatedAt { get; private set; }

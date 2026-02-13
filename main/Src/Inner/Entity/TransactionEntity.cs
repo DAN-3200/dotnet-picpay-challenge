@@ -2,6 +2,7 @@ namespace PicPay.Inner.Entity;
 
 public class TransactionEntity
 {
+   public string? Id;
    public string FkPayer;
    public string FkPayee;
    public decimal Value;

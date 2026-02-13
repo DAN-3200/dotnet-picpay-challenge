@@ -8,7 +8,8 @@ public class PaymentUc(IPaymentRepo repoPayment, IUserRepo repoUser, IHttpServic
 {
    public async Task Transaction(TransactionReq info)
    {
-      var res = await httpServices.RequestExternalApi<MapJson.AuthorizationTransactionRes>("https://util.devi.tools/api/v2/authorize");
+      var res = await httpServices
+         .RequestExternalApi<MapJson.AuthorizationTransactionRes>("https://util.devi.tools/api/v2/authorize");
 
       if (res?.Data.Authorization is not true) throw new ArgumentException("Serviço não autorizado");
 
