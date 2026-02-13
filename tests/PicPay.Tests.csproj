@@ -23,4 +23,8 @@
     <ProjectReference Include="..\main\PicPay.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Src\" />
+  </ItemGroup>
+
 </Project>

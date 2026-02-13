@@ -1,8 +1,8 @@
 <Solution>
-  <Folder Name="/main/">
-    <Project Path="main/PicPay.csproj" />
-  </Folder>
-  <Folder Name="/tests/">
-    <Project Path="tests/PicPay.Tests.csproj" />
-  </Folder>
+    <Folder Name="/main/">
+        <Project Path="main/PicPay.csproj"/>
+    </Folder>
+    <Folder Name="/tests/">
+        <Project Path="tests/PicPay.Tests.csproj"/>
+    </Folder>
 </Solution>
