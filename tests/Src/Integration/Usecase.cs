@@ -6,7 +6,7 @@ using PicPay.Inner.Usecase;
 
 namespace PicPay.Tests.Integration;
 
-public class IntegrationUsecase
+public class Usecase
 {
     [Fact]
     public async Task TestTransaction()
