@@ -10,7 +10,7 @@
 
 Sistema de operações financeiras desenvolvido em C# com .NET e ASP.NET, utilizando PostgreSQL como banco de dados. A aplicação permite realizar depósitos e transferências entre usuários, garantindo controle de saldo e validação das regras de negócio.
 
-O projeto foi implementado com base no desafio técnico do PicPay [(picpay-desafio-backend)]("https://github.com/PicPay/picpay-desafio-backend"), com foco em organização arquitetural, separação de responsabilidades e boas práticas no desenvolvimento de APIs backend.
+O projeto foi implementado com base no desafio técnico do PicPay [(picpay-desafio-backend)](https://github.com/PicPay/picpay-desafio-backend), com foco em organização arquitetural, separação de responsabilidades e boas práticas no desenvolvimento de APIs backend.
 
 ## Tecnologias
 
