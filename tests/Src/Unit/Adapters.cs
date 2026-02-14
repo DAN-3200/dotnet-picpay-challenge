@@ -1,5 +1,5 @@
-﻿using PicPay.Inner.Dtos;
-using PicPay.Outer.Adapters;
+﻿using PicPay.Application.Dtos;
+using PicPay.Infrastructure.Adapters;
 using Xunit.Abstractions;
 
 namespace PicPay.Tests.Unit;

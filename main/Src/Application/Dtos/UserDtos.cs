@@ -1,6 +1,6 @@
-﻿using PicPay.Inner.Entity;
+﻿using PicPay.Domain.Entity;
 
-namespace PicPay.Inner.Dtos;
+namespace PicPay.Application.Dtos;
 
 public record RegisterUserReq(
     string Name,

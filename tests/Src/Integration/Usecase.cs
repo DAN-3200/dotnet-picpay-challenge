@@ -1,8 +1,8 @@
 ﻿using Moq;
-using PicPay.Inner.Dtos;
-using PicPay.Inner.Entity;
-using PicPay.Inner.Ports;
-using PicPay.Inner.Usecase;
+using PicPay.Domain.Entity;
+using PicPay.Application.Dtos;
+using PicPay.Application.Ports;
+using PicPay.Application.Usecase;
 
 namespace PicPay.Tests.Integration;
 
@@ -50,7 +50,7 @@ public class Usecase
                 i.RequestExternalApi<MapJson.AuthorizationTransactionRes>("https://util.devi.tools/api/v2/authorize"))
             .ReturnsAsync(new MapJson.AuthorizationTransactionRes("true", new MapJson.AuthorizationData(true)));
 
-        var usecase = new PaymentUc(
+        var usecase = new PaymentUsecase(
             paymentRepoMock.Object,
             userRepoMock.Object,
             httpServicesMock.Object

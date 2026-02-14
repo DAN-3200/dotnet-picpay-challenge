@@ -1,10 +1,10 @@
-using PicPay.Inner.Dtos;
-using PicPay.Inner.Entity;
-using PicPay.Inner.Ports;
+using PicPay.Application.Dtos;
+using PicPay.Application.Ports;
+using PicPay.Domain.Entity;
 
-namespace PicPay.Inner.Usecase;
+namespace PicPay.Application.Usecase;
 
-public class PaymentUc(IPaymentRepo repoPayment, IUserRepo repoUser, IHttpServices httpServices)
+public class PaymentUsecase(IPaymentRepo repoPayment, IUserRepo repoUser, IHttpServices httpServices)
 {
    public async Task Transaction(TransactionReq info)
    {
@@ -23,7 +23,7 @@ public class PaymentUc(IPaymentRepo repoPayment, IUserRepo repoUser, IHttpServic
       var Payee = await repoUser.GetByUniqueField(info.IdPayee);
       if (Payee is null) throw new ArgumentException("Não há usuário valido para emissão dessa transação");
 
-      var transactionMold = new TransactionEntity(Payer.Id!, Payee.Id!, info.Value, TypeTransaction.PAYMENT);
+      var transactionMold = TransactionEntity.Create(Payer.Id!, Payee.Id!, info.Value, TypeTransaction.TRANSFER);
 
       await repoPayment.ConfirmTransaction(transactionMold);
    }
@@ -41,5 +41,10 @@ public class PaymentUc(IPaymentRepo repoPayment, IUserRepo repoUser, IHttpServic
    public async Task<string> RefundTransaction(string id)
    {
       return await repoPayment.Refund(id) ? "Estorno efetuado com sucesso" : "Estorno recusado";
+   }
+
+   public async Task<List<TransactionEntity>?> ListTransactions()
+   {
+      return await repoPayment.ListTransactions();
    }
 }

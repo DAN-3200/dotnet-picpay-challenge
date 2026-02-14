@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 
-namespace PicPay.Outer.Http.Middlewares;
+namespace PicPay.Infrastructure.Http.Middlewares;
 
 public static class GlobalErrorHandler
 {

@@ -1,4 +1,4 @@
-namespace PicPay.Inner.Entity;
+namespace PicPay.Domain.Entity;
 
 public class UserEntity
 {

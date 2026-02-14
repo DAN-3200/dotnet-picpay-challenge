@@ -1,4 +1,4 @@
-﻿namespace PicPay.Inner.Dtos;
+﻿namespace PicPay.Application.Dtos;
 
 public static class MapJson
 {

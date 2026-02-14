@@ -1,6 +1,6 @@
-﻿using PicPay.Inner.Ports;
+﻿using PicPay.Application.Ports;
 
-namespace PicPay.Outer.Adapters;
+namespace PicPay.Infrastructure.Adapters;
 
 public class HttpServices(HttpClient client) : IHttpServices
 {
