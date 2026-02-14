@@ -1,10 +1,11 @@
-﻿using PicPay.Inner.Entity;
+﻿using PicPay.Domain.Entity;
 
-namespace PicPay.Outer.Persistence.Schemas;
+namespace PicPay.Infrastructure.Persistence.Schemas;
 
 public class UserSchema
 {
     public string? Id { get; set; }
+
     public string Name { get; set; } = string.Empty;
     public string Cpf { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
@@ -13,9 +14,9 @@ public class UserSchema
     public decimal Balance { get; set; }
     public DateTime CreatedAt { get; set; }
 
-    public List<TransactionSchema> TransactionSent { get; set; } = new();
-    public List<TransactionSchema> TransactionReceived { get; set; } = new();
-    
+    public ICollection<TransactionSchema> TransactionsPaid { get; set; } = new List<TransactionSchema>();
+    public ICollection<TransactionSchema> TransactionsReceived { get; set; } = new List<TransactionSchema>();
+
     public static UserSchema ToSchema(UserEntity entity)
     {
         return new UserSchema
