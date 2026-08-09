@@ -5,11 +5,13 @@ using PicPay.Infrastructure.Adapters;
 using PicPay.Infrastructure.Http.Middlewares;
 using PicPay.Infrastructure.Persistence;
 using PicPay.Infrastructure.Persistence.Repository;
+using PicPay.Infrastructure.Telemetry;
 using Scalar.AspNetCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 {
+    builder.AddMyOtel();
     builder.Services.AddOpenApi();
     builder.Services.AddDbContext<DbConnection>(opt => opt.UseNpgsql(builder.Configuration["ConnectionStrings:URL"]));
     builder.Services.AddScoped<HttpClient>();
