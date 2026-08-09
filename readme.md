@@ -1,73 +1,100 @@
-﻿# Sistema Financeiro Simplificado - PicPay Challenge
+﻿# PicPay Challenge - API financeira simplificada
 
 ![C#](https://img.shields.io/badge/c%23-%23239120.svg?style=for-the-badge&logo=csharp&logoColor=white)
-![.Net](https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white)
-![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
+![.NET](https://img.shields.io/badge/.NET-10-512BD4?style=for-the-badge&logo=.net&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
-
 
 ## Descrição
 
-Sistema de operações financeiras desenvolvido em C# com .NET e ASP.NET, utilizando PostgreSQL como banco de dados. A aplicação permite realizar depósitos e transferências entre usuários, garantindo controle de saldo e validação das regras de negócio.
-
-O projeto foi implementado com base no desafio técnico do PicPay [(picpay-desafio-backend)](https://github.com/PicPay/picpay-desafio-backend), com foco em organização arquitetural, separação de responsabilidades e boas práticas no desenvolvimento de APIs backend.
+Este projeto é uma API backend em C# com ASP.NET Core para um sistema financeiro simplificado, inspirando-se no desafio técnico do PicPay. A aplicação oferece operações como cadastro de usuários e transferência entre contas, com validações de negócio e persistência em PostgreSQL.
 
 ## Tecnologias
 
-- C# .NET 10
-- ASP.NET
+- C# / .NET 10
+- ASP.NET Core
+- Entity Framework Core
 - PostgreSQL
-- Docker (opcional)
+- Docker Compose
+- OpenTelemetry
+- Scalar (documentação interativa)
 
-## Estrutura
+## Estrutura do projeto
 
 ```text
-src
-├───Application                  # Orquestra casos de uso (camada de aplicação)
-│   ├───Dtos                     # Modelos de entrada/saída entre camadas
-│   ├───Ports                    # Contratos (interfaces) ex: IUserRepository
-│   └───Usecase                  # Implementação dos casos de uso (regras de fluxo)
-│
-├───Domain                       # Núcleo do negócio (regra pura e invariantes)
-│   └───Entity                   # Entidades de domínio com comportamento
-│
-└───Infrastructure               # Implementações técnicas externas ao domínio
-    ├───Adapters                 # Implementações das Ports (ex: EF, serviços externos)
-    │
-    ├───Http                     # Camada de exposição da aplicação
-    │   ├───Controllers          # Endpoints que chamam os UseCases
-    │   └───Middlewares          # Camada intermediaria entre requisições (ex: Tratamento de errors)
-    │
-    └───Persistence              # Infraestrutura de banco de dados
-        ├───Repository           # Repositórios concretos (implementam Ports)
-        └───Schemas              # Modelos de persistência (mapeamento EF Core)
+main/
+├── appsettings.json.example
+├── Src/
+│   ├── Application/
+│   │   ├── Dtos/
+│   │   ├── Ports/
+│   │   └── Usecase/
+│   ├── Domain/
+│   │   └── Entity/
+│   └── Infrastructure/
+│       ├── Adapters/
+│       ├── Http/
+│       ├── Persistence/
+│       └── Telemetry/
+├── Migrations/
+└── Properties/
 ```
 
-## Instalação e execução
+## Pré-requisitos
 
-### Pre requesitos
 - .NET SDK 10.0+
-- PostgreSQL (Local ou Docker)
+- Docker Desktop
 - Git
 
+## Executando o projeto
+
+### 1) Subir o banco de dados com Docker
+
 ```bash
-# Clone repository
-git clone https://github.com/DAN-3200/dotnet-picpay-challenge.git
-cd dotnet-picpay-challenge/main
-
-# Configure a conexão com PostgreSQL no appsettings.json
-"ConnectionStrings": {
-  "URL": "Host=localhost;Port=<...>;Database=<...>;Username=<...>;Password=<...>;"
-}
-
-# Execute a aplicação
-dotnet run --project .
+docker compose up -d database
 ```
 
-## Documentação
+### 2) Criar o arquivo de configuração local
 
-Documentação disponível a partir do Scalar UI [http://localhost:5015/scalar/v1](http://localhost:5015/scalar/v1)
+Copie o exemplo para um arquivo real de configuração:
+
+```powershell
+Copy-Item .\main\appsettings.example.json .\main\appsettings.json
+```
+
+O arquivo de exemplo já vem com uma configuração compatível com o Docker Compose local:
+
+```json
+{
+  "ConnectionStrings": {
+    "URL": "Host=localhost;Port=5600;Database=picpay;Username=admin;Password=4321"
+  },
+  "OpenTelemetry": {
+    "ServiceName": "PicPay.Api",
+    "Endpoint": "http://localhost:4317"
+  }
+}
+```
+
+### 3) Restaurar dependências e executar
+
+```bash
+cd main
+dotnet restore
+dotnet run
+```
+
+A API ficará disponível em:
+
+- HTTP: http://localhost:5082
+- Documentação interativa: http://localhost:5082/scalar/v1
+
+## Observações
+
+- O projeto usa migrations do Entity Framework Core.
+- O OpenTelemetry está configurado para exportar para o endpoint local padrão em http://localhost:4317.
+- O arquivo [main/appsettings.json.example](main/appsettings.json.example) deve ser usado como base para configurações locais e não deve conter segredos reais em ambientes compartilhados.
 
 ## Licença
 
-Este projeto está licenciado sob a Licença MIT. Consulte o arquivo [LICENSE](./LICENSE) para mais detalhes.
+Este projeto está licenciado sob a Licença MIT. Consulte o arquivo [LICENSE](LICENSE) para mais detalhes.
