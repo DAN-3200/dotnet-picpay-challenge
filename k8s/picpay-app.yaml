@@ -1,0 +1,117 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: app
+---
+# 1. Armazenamento persistente para o PostgreSQL (volume)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: db-picpay-pvc
+  namespace: app
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+# 2. ConfigMap para variáveis do banco de dados
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: picpay-db-config
+  namespace: app
+data:
+  POSTGRES_USER: "admin"
+  POSTGRES_PASSWORD: "4321"
+  POSTGRES_DB: "picpay"
+---
+# 3. Deployment do PostgreSQL (database)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: picpay-database
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: picpay-database
+  template:
+    metadata:
+      labels:
+        app: picpay-database
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:16-alpine
+        ports:
+        - containerPort: 5432
+        envFrom:
+        - configMapRef:
+            name: picpay-db-config
+        volumeMounts:
+        - name: db-picpay-storage
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: db-picpay-storage
+        persistentVolumeClaim:
+          claimName: db-picpay-pvc
+---
+# 4. Service do PostgreSQL
+apiVersion: v1
+kind: Service
+metadata:
+  name: picpay-database-service
+  namespace: app
+spec:
+  selector:
+    app: picpay-database
+  ports:
+  - port: 5432
+    targetPort: 5432
+---
+# -- 5. Deployment da API (.NET)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: picpay-api
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: picpay-api
+  template:
+    metadata:
+      labels:
+        app: picpay-api
+    spec:
+      containers:
+      - name: api
+        image: picpay-api:1.1
+        imagePullPolicy: Never # Força o uso da imagem local gerada no Minikube
+        ports:
+        - containerPort: 8080
+        env:
+        # String de conexão usando o DNS do serviço interno do Postgres no namespace 'app'
+        - name: ConnectionStrings__DefaultConnection
+          value: "Host=picpay-database-service.app.svc.cluster.local;Port=5432;Database=picpay;Username=admin;Password=4321;"
+        # Aponta para a pilha de observabilidade no namespace 'observability'
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: "http://otel-collector.observability.svc.cluster.local:4317"
+---
+# 6. Service da API (.NET)
+apiVersion: v1
+kind: Service
+metadata:
+  name: picpay-api-service
+  namespace: app
+spec:
+  type: ClusterIP
+  selector:
+    app: picpay-api
+  ports:
+  - port: 8080
+    targetPort: 8080
