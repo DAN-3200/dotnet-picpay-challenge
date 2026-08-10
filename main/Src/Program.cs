@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using PicPay.Application.Ports;
 using PicPay.Application.Usecase;
 using PicPay.Infrastructure.Adapters;
@@ -37,6 +38,29 @@ var app = builder.Build();
         app.MapScalarApiReference();
         app.MapOpenApi();
     }
+
+    app.MapHealthChecks("/health",new HealthCheckOptions
+    {
+        Predicate = _ => true,
+        ResponseWriter = async (context, report) =>
+        {
+            context.Response.ContentType = "application/json";
+            var result = System.Text.Json.JsonSerializer.Serialize(new
+            {
+                status = report.Status.ToString(),
+                checks = report.Entries.Select(entry => new
+                {
+                    name = entry.Key,
+                    status = entry.Value.Status.ToString(),
+                    exception = entry.Value.Exception?.Message,
+                    duration = entry.Value.Duration.ToString()
+                })
+            });
+            await context.Response.WriteAsync(result);
+        }
+    });
+
+    
 
     app.UseGlobalErrorHandler();
     app.UseHttpsRedirection();
