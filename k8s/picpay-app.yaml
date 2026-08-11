@@ -34,7 +34,7 @@ metadata:
   name: picpay-database
   namespace: app
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: picpay-database
@@ -44,20 +44,28 @@ spec:
         app: picpay-database
     spec:
       containers:
-      - name: postgres
-        image: postgres:16-alpine
-        ports:
-        - containerPort: 5432
-        envFrom:
-        - configMapRef:
-            name: picpay-db-config
-        volumeMounts:
-        - name: db-picpay-storage
-          mountPath: /var/lib/postgresql/data
+        - name: postgres
+          image: postgres:16-alpine
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: picpay-db-config
+          volumeMounts:
+            - name: db-picpay-storage
+              mountPath: /var/lib/postgresql/data
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
       volumes:
-      - name: db-picpay-storage
-        persistentVolumeClaim:
-          claimName: db-picpay-pvc
+        - name: db-picpay-storage
+          persistentVolumeClaim:
+            claimName: db-picpay-pvc
+
 ---
 # 4. Service do PostgreSQL
 apiVersion: v1
@@ -69,8 +77,8 @@ spec:
   selector:
     app: picpay-database
   ports:
-  - port: 5432
-    targetPort: 5432
+    - port: 5432
+      targetPort: 5432
 ---
 # -- 5. Deployment da API (.NET)
 apiVersion: apps/v1
@@ -89,18 +97,25 @@ spec:
         app: picpay-api
     spec:
       containers:
-      - name: api
-        image: picpay-api:1.1
-        imagePullPolicy: Never # Força o uso da imagem local gerada no Minikube
-        ports:
-        - containerPort: 8080
-        env:
-        # String de conexão usando o DNS do serviço interno do Postgres no namespace 'app'
-        - name: ConnectionStrings__DefaultConnection
-          value: "Host=picpay-database-service.app.svc.cluster.local;Port=5432;Database=picpay;Username=admin;Password=4321;"
-        # Aponta para a pilha de observabilidade no namespace 'observability'
-        - name: OTEL_EXPORTER_OTLP_ENDPOINT
-          value: "http://otel-collector.observability.svc.cluster.local:4317"
+        - name: api
+          image: picpay-api:1.1
+          imagePullPolicy: Never # Força o uso da imagem local gerada no Minikube
+          ports:
+            - containerPort: 8080
+          env:
+            # String de conexão usando o DNS do serviço interno do Postgres no namespace 'app'
+            - name: ConnectionStrings__DefaultConnection
+              value: "Host=picpay-database-service.app.svc.cluster.local;Port=5432;Database=picpay;Username=admin;Password=4321;"
+            # Aponta para a pilha de observabilidade no namespace 'observability'
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://otel-collector.observability.svc.cluster.local:4317"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
 ---
 # 6. Service da API (.NET)
 apiVersion: v1
@@ -113,5 +128,5 @@ spec:
   selector:
     app: picpay-api
   ports:
-  - port: 8080
-    targetPort: 8080
+    - port: 8080
+      targetPort: 8080
