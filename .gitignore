@@ -10,3 +10,4 @@ appsettings.Development.json
 PicPay.sln.DotSettings.user
 main/PicPay.csproj.user
 *.DotSettings.user
+.vscode

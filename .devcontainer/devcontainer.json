@@ -1,0 +1,25 @@
+{
+   "name": "C# (.NET) Dev Container",
+   "build": {
+      "dockerfile": "Dockerfile"
+   },
+   // Configurações do VS Code dentro do container
+   "customizations": {
+      "vscode": {
+         // Extensões essenciais para desenvolvimento em C#
+         "extensions": [
+            "ms-dotnettools.csdevkit", // C# Dev Kit (Gere projetos, testes e solução)
+            "ms-dotnettools.csharp", // Extensão base de linguagem C# (OmniSharp/LSP)
+            "ms-vscode.azure-account", // Opcional: Útil se usares Azure
+            "VisualStudioExptTeam.vscodeintellicode" // Sugestões de código com IA
+         ]
+      }
+   },
+   "forwardPorts": [
+      5000,
+      5001,
+      5015
+   ],
+   "postCreateCommand": "dotnet restore",
+   "remoteUser": "vscode"
+}
