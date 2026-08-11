@@ -104,10 +104,10 @@ spec:
             - containerPort: 8080
           env:
             # String de conexão usando o DNS do serviço interno do Postgres no namespace 'app'
-            - name: ConnectionStrings__DefaultConnection
+            - name: ConnectionStrings__URL
               value: "Host=picpay-database-service.app.svc.cluster.local;Port=5432;Database=picpay;Username=admin;Password=4321;"
             # Aponta para a pilha de observabilidade no namespace 'observability'
-            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            - name: OpenTelemetry__Endpoint
               value: "http://otel-collector.observability.svc.cluster.local:4317"
           resources:
             requests:
