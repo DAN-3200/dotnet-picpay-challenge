@@ -1,0 +1,29 @@
+name: Pipeline de CI - .NET
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Restaurar dependências
+        run: dotnet restore PicPay.slnx
+
+      - name: Compilar código
+        run: dotnet build PicPay.slnx --no-restore --configuration Release
+
+      - name: Rodar testes
+        run: dotnet test PicPay.slnx --no-build --configuration Release
