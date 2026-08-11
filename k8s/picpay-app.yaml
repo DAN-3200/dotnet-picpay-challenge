@@ -34,7 +34,7 @@ metadata:
   name: picpay-database
   namespace: app
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: picpay-database
@@ -87,7 +87,7 @@ metadata:
   name: picpay-api
   namespace: app
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: picpay-api
