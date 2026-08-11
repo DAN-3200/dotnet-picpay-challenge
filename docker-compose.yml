@@ -1,15 +1,35 @@
-﻿services:
+﻿name: picpay-context
+
+services:
+  api:
+    container_name: picpay_api
+    build:
+      context: .
+      dockerfile: dockerfile
+    ports:
+      - 8080:8080
+    networks:
+      - picpay_network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
   database:
-    image: postgres:latest
-    container_name: db_picpay
+    image: postgres:16-alpine
+    container_name: picpay_database
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: 4321
-      POSTGRES_DB: picpay
+      POSTGRES_USER: ${POSTGRES_USER:-admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-4321}
+      POSTGRES_DB: ${POSTGRES_DB:-picpay}
     ports:
       - 5600:5432
     volumes:
-      - db_picpay:/var/lib/postgress/database
+      - db_picpay:/var/lib/postgresql/data
+    networks:
+      - picpay_network
 
 volumes:
   db_picpay:
+
+networks:
+  picpay_network:
+  
